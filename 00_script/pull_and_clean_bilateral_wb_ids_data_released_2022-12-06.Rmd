@@ -1,0 +1,262 @@
+---
+title: "Pulling & Cleaning World Bank IDS Bilateral Data"
+output: html_notebook
+---
+
+
+# Load Packages
+```{r, setup, message=FALSE}
+library(tidyverse) # for general data manipulation
+library(jsonlite) # for working with JSON
+library(httr) # for working with APIs
+library(janitor) # for data cleaning
+library(here) # for sharing-friendly relative file paths
+library(glue) # for building character strings
+library(tictoc) # for measuring run time
+
+# TODO make code more performant
+#library(dtplyr) # for more performant code
+#library(furrr) # for more performant code
+```
+
+
+# Step 1:  Define Functions
+
+`get_unique_ids_values()` returns a tibble of the IDS codes and names for a given concept in the IDS. You can use any of the following as a function argument:  
+
+* `country`: the list of debtor countries and regions
+* `series`: the list of all available IDS data series
+* `counterpart-area`: the list of all available creditors (countries, regions, and private entities)
+* `time`: the list of all of the years available.
+
+
+```{r}
+get_unique_ids_values <- function(ids_concept) {
+  
+  # create the API URL
+  api_url <- glue("https://api.worldbank.org/v2/sources/6/{ids_concept}?per_page=1000&format=JSON")
+  
+  # read the resulting JSON
+  concept_json <- fromJSON(api_url)
+  
+  # extract the variable name and the variable id from the nested JSON structure
+  concept_json$source %>%
+    unnest(concept, names_sep = "_") %>%
+    unnest(concept_variable, names_sep = "_") %>%
+    select("ids_{ids_concept}_id"   := concept_variable_id, 
+           "ids_{ids_concept}_name" := concept_variable_value)
+}
+```
+
+
+`flatten_nested_variable_df()` is a helper function that flattens nested data inside the JSON returned from the IDS API.   
+
+```{r}
+flatten_nested_variable_df <- function(variable_df) {
+  variable_df %>%
+    rename(pretty = value) %>%
+    pivot_wider(names_from = concept, values_from = c(id,pretty)) %>%
+    janitor::clean_names() %>%
+    # you can change the data you want to include
+    select(series_full_name = pretty_series, 
+           wb_debtor_country_name = pretty_country,
+           wb_debtor_country_id = id_country,
+           wb_creditor_name = pretty_counterpart_area, 
+           wb_creditor_id = id_counterpart_area,
+           year = pretty_time) %>%
+    # make year an integer.  It is character by default.
+    mutate(year = as.integer(year))
+}
+```
+
+`get_ids_last_update()`: gives us the last date that the IDS data was updated. 
+```{r}
+get_ids_last_update <- function(ids_api_response) {
+  processed_api_response <- ids_api_response %>%
+    content(as = "text", encoding = "UTF-8") %>%
+    fromJSON(flatten = TRUE)
+  
+  
+    lubridate::ymd(processed_api_response$lastupdated)
+}
+```
+
+`process_ids_data()`: this function processes the data from the IDS API response.  It uses  `flatten_nested_variable_df()` as a helper function.
+
+```{r}
+process_ids_data <- function(ids_api_response) {
+  
+  # turn the API response into JSON
+  processed_api_response <- ids_api_response %>%
+    content(as = "text", encoding = "UTF-8") %>%
+    fromJSON(flatten = TRUE)
+
+  #Extract the data that we want from the JSON
+  processed_api_response$source$data %>%
+    as_tibble() %>%
+    # filtering out the NA values reduces the size of the data substantially for processing.
+    filter(!is.na(value)) %>%
+    mutate(names_data = map(.x = variable, .f = flatten_nested_variable_df)) %>%
+    select(-variable) %>%
+    unnest(names_data) %>%
+    relocate(value, .after = last_col())
+}
+```
+
+# Step 2:  Choose the data series you want
+
+I create a tibble of the data series I want from the IDS API.
+
+I'm using the series that I saw from [David Mihalyi's Github](https://github.com/davidmihalyi/wb-ids-lenders) because they are useful high-level breakdowns of external debt. 
+
+
+
+```{r}
+ids_tibble <- tribble(
+  ~ids_short_name, ~api_code,
+  "External Debt - PPG - Total", "DT.DOD.DPPG.CD",
+  "External Debt - PPG - Multilateral", "DT.DOD.MLAT.CD",
+  "External Debt - PPG - Bilateral", "DT.DOD.BLAT.CD",
+  "External Debt - PPG - Private Banks & Financial Institutions", "DT.DOD.PCBK.CD",
+  "External Debt - PPG - Other Private Creditors", "DT.DOD.PROP.CD",
+  "External Debt - PPG - Bonds", "DT.DOD.PBND.CD") 
+  
+ids_tibble
+```
+
+You can find all of the IDS series by using the function `get_unique_ids_values()` and using "series" as the argument. You can replace any of your codes 
+
+```{r}
+get_unique_ids_values("series")
+```
+
+# Step 3: Get the data from the API
+
+I choose to get the data from the API and to process the data in two different steps.  I do this because if something goes wrong, it makes it easier to know if it was an API issue or a data processing issue.  You can make this into one extended data pipeline if you prefer.
+
+Running on a relatively new Macbook Air, this process takes me 15 minutes.
+
+```{r}
+tic()
+
+all_ids_data_from_api <- ids_tibble %>%
+  # create API URL
+  mutate(api_url = glue("https://api.worldbank.org/v2/sources/6/country/all/series/{api_code}/counterpart-area/all/time/all?format=json&per_page=2500000")) %>%
+  # use httr::GET to request the data from the API
+  mutate(data_from_api = map(.x = api_url, .f = GET))
+
+all_ids_data_from_api
+
+toc()
+```
+
+
+## Note:On the API code
+
+If you change the parameters, make sure that the final number listed in the `per_page=2500000` part of the API call above is larger than the number of values you're trying to get with each API call.  I came up with 2,500,000 by adding a little bit to the following calculation.  We are asking the API to get all values for `country`, `counterpart-area`, and `time`.  So we need a number higher than the product of those numbers.
+
+```{r}
+country_n <- get_unique_ids_values("country") %>% nrow()
+creditor_n <- get_unique_ids_values("counterpart-area") %>% nrow()
+time_n <- get_unique_ids_values("time") %>% nrow()
+
+per_page_for_api_should_be_at_least_this_much <- country_n * creditor_n * time_n
+
+per_page_for_api_should_be_at_least_this_much
+```
+
+# Processing
+
+The data processing takes a while. Running it on a relatively new macbook air, it took 2.860845 hours. 
+
+There are ways to make this more performant. I went down the rabbit hole of trying to use parallel processing using [furrr::future_map](https://furrr.futureverse.org/), but couldn't get it to work well. It still could be a good option but will require tweaking. Anotehr promsing option is [dtplyr](https://dtplyr.tidyverse.org/), which provides a data.table backend for dplyr. 
+
+Given that I'll run this script 1x per year when new data comes out (or when I want other IDS series), this is good enough for now. I'm a tidyverse zealot fwiw. Unless there is a compelling use-case for needing performant code, I prefer modular, readable code even when its slower. I just run it in the background.
+
+
+```{r}
+tic()
+
+processed_ids_data <- all_ids_data_from_api %>%
+  # add the date the data was last updated
+  mutate(data_last_updated = map(.x = data_from_api, .f = get_ids_last_update)) %>%
+  unnest(data_last_updated) %>%
+  # process the data from the API response into a tibble
+  mutate(data = map(.x = data_from_api, .f = process_ids_data)) %>%
+  # get rid of the excess data that we don't need
+  select(-api_url:-data_from_api) %>%
+  unnest(data) %>%
+  arrange(year, ids_short_name, wb_debtor_country_name, wb_creditor_name)
+
+processed_ids_data
+
+toc()
+```
+
+
+Despite being a tidy data zealot, I'm saving the data object on Github in wide format because it is significantly more space efficient.  It's 39 MB in tidy (long) format, and 9 MB in wide format. 
+
+
+```{r}
+processed_ids_data_wide <- processed_ids_data %>%
+  arrange(year, ids_short_name, wb_debtor_country_name, wb_creditor_name) %>%
+  pivot_wider(names_from = year, values_from = value)
+
+processed_ids_data_wide
+```
+
+
+
+
+```{r}
+pryr::object_size(processed_ids_data)
+```
+
+
+```{r}
+pryr::object_size(processed_ids_data_wide)
+```
+
+Write the data to the `processed_data` folder
+
+```{r}
+write_csv(processed_ids_data_wide,  here("01_data_processed", "ids_data_released_2022-12-06.csv"))
+```
+
+
+To tidy the wide data again, use the following function:
+
+```{r}
+pivot_year_columns_longer <- function(wide_df) {
+  wide_df %>%
+    pivot_longer(cols = matches("\\d{4}"), names_to = "year", names_transform = as.integer)
+}
+```
+
+
+```{r}
+processed_ids_data_wide %>%
+  pivot_year_columns_longer()
+```
+
+
+# Saving Relevant Metadata
+
+Saving the unique codes for each of the IDS database options.
+
+```{r}
+write_metadata <- function(metadata_name) {
+  
+  # get the metadata from the WB API (function defined at top)
+  metadata_df <- get_unique_ids_values(metadata_name)
+  
+  # write it as a csv 
+  write_csv(metadata_df, here("01_data_processed", glue("unique_{metadata_name}.csv")))
+}
+```
+
+```{r}
+c("country", "counterpart-area", "time", "series") %>% map(.f = write_metadata)
+```
+
+

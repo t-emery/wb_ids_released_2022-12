@@ -1,0 +1,304 @@
+ids_counterpart-area_id,ids_counterpart-area_name
+001,Austria
+002,Belgium
+003,Denmark
+004,France
+005,"Germany, Fed. Rep. of"
+006,Italy
+007,Netherlands
+008,Norway
+009,Portugal
+010,Sweden
+011,Switzerland
+012,United Kingdom
+018,Finland
+019,World Trade Organization
+020,Iceland
+021,Ireland
+022,Luxembourg
+025,Andorra
+026,Monaco
+030,Cyprus
+035,Gibraltar
+040,Greece
+044,Kosovo
+045,Malta
+050,Spain
+055,Turkiye
+060,Serbia
+061,Slovenia
+062,Croatia
+063,Yugoslavia
+064,Bosnia-Herzegovina
+065,Montenegro
+066,North Macedonia
+068,Czechia
+069,Slovak Republic
+071,Albania
+072,Bulgaria
+073,Czechoslovakia
+074,German Dem. Rep.
+075,Hungary
+076,Poland
+077,Romania
+078,USSR
+082,Estonia
+083,Latvia
+084,Lithuania
+085,Ukraine
+086,Belarus
+087,Russian Federation
+091,Armenia
+093,Moldova
+095,Georgia
+130,Algeria
+133,Libya
+136,Morocco
+139,Tunisia
+142,Egypt
+216,South Africa
+225,Angola
+227,Botswana
+228,Burundi
+229,Cameroon
+230,Cabo Verde
+231,Central African Republic
+232,Chad
+233,Comoros
+234,"Congo, Rep."
+235,"Congo, Dem. Rep."
+236,Benin
+237,East African Community
+238,Ethiopia
+239,Gabon
+240,"Gambia, The"
+241,Ghana
+243,Guinea
+244,Guinea-Bissau
+245,Equatorial Guinea
+247,"Cote D`Ivoire, Republic Of"
+248,Kenya
+249,Lesotho
+251,Liberia
+252,Madagascar
+253,Malawi
+255,Mali
+256,Mauritania
+257,Mauritius
+259,Mozambique
+260,Niger
+261,Nigeria
+264,Reunion
+265,Zimbabwe
+266,Rwanda
+268,Sao Tome & Principe
+269,Senegal
+270,Seychelles
+271,Eritrea
+272,Sierra Leone
+273,Somalia
+274,Djibouti
+275,Namibia
+278,Sudan
+280,Eswatini
+282,Tanzania
+283,Togo
+285,Uganda
+287,Burkina Faso
+288,Zambia
+301,Canada
+302,United States
+328,Bahamas
+329,Barbados
+331,Bermuda
+336,Costa Rica
+338,Cuba
+340,Dominican Republic
+342,El Salvador
+345,Guadeloupe
+347,Guatemala
+349,Haiti
+351,Honduras
+352,Belize
+354,Jamaica
+358,Mexico
+361,Neth. Antilles
+364,Nicaragua
+366,Panama
+368,Puerto Rico
+373,Aruba
+375,Trinidad & Tobago
+376,Anguilla
+377,Antigua
+378,Dominica
+379,Virgin Is.(US)
+381,Grenada
+382,St. Kitts And Nevis
+383,St. Lucia
+384,St. Vincent & The Grenadines
+386,Cayman Islands
+425,Argentina
+428,Bolivia
+431,Brazil
+434,Chile
+437,Colombia
+440,Ecuador
+446,Guyana
+451,Paraguay
+454,Peru
+457,Surinam
+460,Uruguay
+463,"Venezuela, Republic Bolivarian"
+520,Azerbaijan
+521,Kazakhstan
+522,Kyrgyz Republic
+523,Uzbekistan
+524,Tajikistan
+525,Turkmenistan
+530,Bahrain
+540,"Iran, Islamic Republic Of"
+543,Iraq
+546,Israel
+549,Jordan
+552,Kuwait
+555,Lebanon
+558,Oman
+561,Qatar
+566,Saudi Arabia
+573,Syrian Arab Republic
+576,United Arab Emirates
+580,"Yemen, Republic Of"
+625,Afghanistan
+630,Bhutan
+635,Myanmar
+640,Sri Lanka
+646,India
+655,Maldives
+660,Nepal
+665,Pakistan
+666,Bangladesh
+701,Japan
+725,Brunei
+728,Cambodia
+730,China
+734,Guam
+735,Hong Kong
+738,Indonesia
+740,"Korea, D.P.R. of"
+742,"Korea, Republic of"
+745,Lao People's Democratic Rep.
+748,Macao
+751,Malaysia
+753,Mongolia
+755,Philippines
+761,Singapore
+764,Thailand
+765,Timor-Leste
+769,Vietnam
+801,Australia
+802,UN-UNETPSA
+803,UN-Office on Drugs and Crime (UNDCP)
+804,UN-Fund for Human Rights
+806,UN-Development Fund for Women (UNIFEM)
+807,UN-Environment Programme (UNEP)
+808,UN-General Assembly (UNGA)
+809,UN-INSTRAW
+810,Colombo Plan
+811,Global Environment Facility
+812,Montreal Protocol Fund
+813,UN-Fund for Drug Abuse Control (UNFDAC)
+814,UN-World Intellectual Property Organization
+815,African Export-Import Bank
+816,Caribbean Community (CARICOM)
+817,Eastern & Southern African Trade & Dev. Bank (TDB)
+820,New Zealand
+832,Fiji
+836,Kiribati
+840,French Polynesia
+850,New Caledonia (Fr.)
+854,Vanuatu
+858,Pacific Is. (Us)
+860,Micronesia Fed Sts
+862,Papua New Guinea
+866,Solomon Islands
+870,Tonga
+877,International Bank for Economic Cooperation (IBEC)
+878,UN-Regular Programme of Technical Coop. (RPTC)
+880,Samoa
+888,Econ. Comm. of the Great Lakes Countries (ECGLC)
+890,Bolivarian Alliance for the Americas (ALBA)
+892,Fondo Latinoamericano de Reservas (FLAR)
+893,ECO Trade and Dev. Bank
+894,Central American Bank for Econ. Integ. (CABEI)
+895,International Coffee Organization (ICO)
+897,Arab International Bank
+898,Plata Basin Financial Dev. Fund
+899,Asian Infrastructure Investment Bank
+901,World Bank-IBRD                         
+902,World Bank-MIGA
+903,International Finance Corporation
+904,International Investment Bank (IIB)
+905,World Bank-IDA                         
+906,Caribbean Dev. Bank
+907,International Monetary Fund
+909,Inter-American Dev. Bank      
+910,Central American Bank for Econ. Integration (BCIE)
+911,Bank for International Settlements (BIS)
+913,African Dev. Bank         
+915,Asian Dev. Bank   
+917,European Economic Community (EEC)
+918,European Development Fund (EDF)
+919,European Investment Bank
+920,Corporacion Andina de Fomento
+921,Arab Fund for Economic & Social Development
+922,Arab African International Bank
+924,European Coal and Steel Community (ECSC)
+925,UN-Industrial Development Organization (UNIDO)
+926,Council of Europe
+927,EUROFIMA
+931,World Health Organization
+932,Food and Agriculture Organization (FAO)
+933,UN-World Meteorological Organization
+939,Latin Amer. Conf. of Saving & Credit Coop. (COLAC)
+940,International Labour Organization (ILO)
+942,"UN-Educ., Scientific and Cultural Org. (UNESCO)"
+946,Latin American Agribusiness Dev. Corp. (LAAD)
+947,Arab League
+948,Entente Council
+950,Nordic Development Fund
+951,OPEC Fund for International Dev.
+952,Org. of Arab Petroleum Exporting Countries (OAPEC)
+953,Arab Bank for Economic Dev. in Africa (BADEA)
+957,West African Development Bank - BOAD
+958,European Relief Fund
+959,UN-Development Programme (UNDP)
+960,UN-Regular Programme of Technical Assistance
+961,European Social Fund (ESF)
+962,Foreign Trade Bank of Latin America (BLADEX)
+963,UN-Children's Fund (UNICEF)
+964,UN-Relief and Works Agency (UNRWA)
+966,UN-World Food Programme (WFP)
+967,UN-High Commissioner for Refugees (UNHCR)
+969,Nordic Investment Bank
+970,West African Monetary Union (UMOA)
+971,Central Bank of West African States (BCEAO)
+973,Arab Monetary Fund
+974,UN-Population Fund (UNFPA)
+975,European Union
+976,Islamic Dev. Bank
+977,Eurasian Development Bank
+978,Nordic Environment Finance Corporation (NEFCO)
+979,Islamic Solidarity Fund for Dev. (ISFD)
+980,Arab Fund for Tech. Assist. to African Countries
+983,Arab Towns Organization (ATO)
+987,European Free Trade Association (EFTA)
+988,International Fund for Agricultural Dev.
+990,European Bank for Reconstruction and Dev. (EBRD)
+991,South Asian Development Fund (SADF)
+992,Center for Latin American Monetary Studies (CEMLA)
+993,Dev. Bank of the Central African States (BDEAC)
+994,Multiple Lenders
+997,Economic Community of West African States (ECOWAS)
+BND,Bondholders
+FCW,Other Multiple Lenders
+WLD,World
